@@ -39,11 +39,11 @@ const Products = () => {
 
     return (
         <div className="container mx-auto">
-            <input type="text" placeholder="Type here" className="input input-bordered w-full max-w-xs" onChange={e => setSearch(e.target.value)} />
+            <input type="text" placeholder="Type here" className="input input-bordered w-full max-w-xs" onChange={e => {setSearch(e.target.value); setCurrentPage(1)}} />
             <br />
             <br />
 
-            <select className="select select-bordered w-full max-w-xs" onChange={e => setBrand(e.target.value)} value={brand}>
+            <select className="select select-bordered w-full max-w-xs" onChange={e => {setBrand(e.target.value); setCurrentPage(1)}} value={brand}>
                 <option disabled selected>Who shot first?</option>
                 <option>MSI</option>
                 <option>Asus</option>
