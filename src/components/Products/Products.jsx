@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react"
+import { Link } from "react-router-dom";
 
 const Products = () => {
     const [itemsPerPage, setItemsPerPage] = useState(8);
@@ -39,11 +40,11 @@ const Products = () => {
 
     return (
         <div className="container mx-auto">
-            <input type="text" placeholder="Type here" className="input input-bordered w-full max-w-xs" onChange={e => {setSearch(e.target.value); setCurrentPage(1)}} />
+            <input type="text" placeholder="Type here" className="input input-bordered w-full max-w-xs" onChange={e => { setSearch(e.target.value); setCurrentPage(1) }} />
             <br />
             <br />
 
-            <select className="select select-bordered w-full max-w-xs" onChange={e => {setBrand(e.target.value); setCurrentPage(1)}} value={brand}>
+            <select className="select select-bordered w-full max-w-xs" onChange={e => { setBrand(e.target.value); setCurrentPage(1) }} value={brand}>
                 <option disabled selected>Who shot first?</option>
                 <option>MSI</option>
                 <option>Asus</option>
@@ -53,22 +54,24 @@ const Products = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
                 {
                     products?.map(product => <div key={product?._id}>
-                        <div>
-                            <div className="card bg-base-100 shadow-xl border mt-3">
-                                <figure>
-                                    <img
-                                        src={product?.productImage}
-                                        alt="Shoes" />
-                                </figure>
-                                <div className="card-body">
-                                    <h2 className="card-title">{product?.productName}</h2>
-                                    <p>Price: ${product?.price}</p>
-                                    <div className="card-actions justify-end">
-                                        <button className="btn btn-primary">Buy Now</button>
+                        <Link to={`/product-details/${product?._id}`}>
+                            <div>
+                                <div className="card bg-base-100 shadow-xl border mt-3">
+                                    <figure>
+                                        <img
+                                            src={product?.productImage}
+                                            alt="Shoes" />
+                                    </figure>
+                                    <div className="card-body">
+                                        <h2 className="card-title">{product?.productName}</h2>
+                                        <p>Price: ${product?.price}</p>
+                                        <div className="card-actions justify-end">
+                                            <button className="btn btn-primary">Buy Now</button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </Link>
                     </div>)
                 }
             </div>
