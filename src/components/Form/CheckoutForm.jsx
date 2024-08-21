@@ -2,14 +2,31 @@
 // Learn how to accept a payment using the official Stripe docs.
 // https://stripe.com/docs/payments/accept-a-payment#web
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { CardElement, useElements, useStripe } from '@stripe/react-stripe-js';
 
 import '../Form/CheckoutForm.css';
+import useAxiosCommon from '../../hooks/useAxiosCommon';
 
 const CheckoutForm = ({ product }) => {
+    const [clientSecret, setClientSecret] = useState("");
+    const axiosCommon = useAxiosCommon();
     const stripe = useStripe();
     const elements = useElements();
+
+    console.log("hiii")
+
+
+    useEffect(() => {
+        const getClientSecret = async price => {
+            const { data } = await axiosCommon.post("/create-payment-intent", price);
+            console.log('client secret from server', data)
+            setClientSecret(data.clientSecret)
+        }
+        if (product?.price && product?.price > 1) {
+            getClientSecret()
+        }
+    }, [product?.price]);
 
     const handleSubmit = async (event) => {
         // Block native form submission.
