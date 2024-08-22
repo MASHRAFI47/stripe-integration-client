@@ -2,11 +2,12 @@
 // Learn how to accept a payment using the official Stripe docs.
 // https://stripe.com/docs/payments/accept-a-payment#web
 
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { CardElement, useElements, useStripe } from '@stripe/react-stripe-js';
 
 import '../Form/CheckoutForm.css';
 import useAxiosCommon from '../../hooks/useAxiosCommon';
+import PropTypes from 'prop-types';
 
 const CheckoutForm = ({ product }) => {
     const [clientSecret, setClientSecret] = useState("");
@@ -84,6 +85,11 @@ const CheckoutForm = ({ product }) => {
         </form>
     );
 };
+
+
+CheckoutForm.propTypes = {
+    product: PropTypes.object
+}
 
 
 export default CheckoutForm;
