@@ -10,6 +10,7 @@ import useAxiosCommon from '../../hooks/useAxiosCommon';
 import PropTypes from 'prop-types';
 
 const CheckoutForm = ({ product }) => {
+    // eslint-disable-next-line no-unused-vars
     const [clientSecret, setClientSecret] = useState("");
     const axiosCommon = useAxiosCommon();
     const stripe = useStripe();
