@@ -10,7 +10,9 @@ import useAxiosCommon from '../../hooks/useAxiosCommon';
 import PropTypes from 'prop-types';
 
 const CheckoutForm = ({ product }) => {
-    const [clientSecret, setClientSecret] = useState("");
+    const [clientSecret, setClientSecret] = useState();
+    const [cardError, setCardError] = useState("");
+    const [processing, setProcessing] = useState(false);
     const axiosCommon = useAxiosCommon();
     const stripe = useStripe();
     const elements = useElements();
@@ -24,14 +26,16 @@ const CheckoutForm = ({ product }) => {
             setClientSecret(data.clientSecret)
         }
         if (product?.price && product?.price > 1) {
-            getClientSecret({price: product?.price})
+            getClientSecret({ price: product?.price })
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [product?.price]);
 
 
     const handleSubmit = async (event) => {
         // Block native form submission.
         event.preventDefault();
+        setProcessing(true);
 
         if (!stripe || !elements) {
             // Stripe.js has not loaded yet. Make sure to disable
@@ -56,33 +60,38 @@ const CheckoutForm = ({ product }) => {
 
         if (error) {
             console.log('[error]', error);
+            setCardError(error.message);
         } else {
             console.log('[PaymentMethod]', paymentMethod);
         }
     };
 
     return (
-        <form onSubmit={handleSubmit}>
-            <CardElement
-                options={{
-                    style: {
-                        base: {
-                            fontSize: '16px',
-                            color: '#424770',
-                            '::placeholder': {
-                                color: '#aab7c4',
+        <>
+            <form onSubmit={handleSubmit}>
+                <CardElement
+                    options={{
+                        style: {
+                            base: {
+                                fontSize: '16px',
+                                color: '#424770',
+                                '::placeholder': {
+                                    color: '#aab7c4',
+                                },
+                            },
+                            invalid: {
+                                color: '#9e2146',
                             },
                         },
-                        invalid: {
-                            color: '#9e2146',
-                        },
-                    },
-                }}
-            />
-            <button type="submit" disabled={!stripe}>
-                {`Pay ${'$' + product?.price}`}
-            </button>
-        </form>
+                    }}
+                />
+                <button type="submit" disabled={!stripe || !clientSecret || processing}>
+                    {`Pay ${'$' + product?.price}`}
+                </button>
+            </form>
+
+            {cardError && <p>{cardError}</p>}
+        </>
     );
 };
 
