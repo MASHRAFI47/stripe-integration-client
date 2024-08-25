@@ -23,7 +23,6 @@ const ProductDetails = () => {
 
     if(isLoading) return <LoadingSpinner />
 
-    console.log(product)
 
     return (
         <div className="container mx-auto">

@@ -3,6 +3,7 @@ import { useEffect, useState } from "react"
 import { Link } from "react-router-dom";
 
 const Products = () => {
+    // eslint-disable-next-line no-unused-vars
     const [itemsPerPage, setItemsPerPage] = useState(8);
     const [currentPage, setCurrentPage] = useState(1);
     const [count, setCount] = useState(0);

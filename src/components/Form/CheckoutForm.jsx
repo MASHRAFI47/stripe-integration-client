@@ -10,25 +10,24 @@ import useAxiosCommon from '../../hooks/useAxiosCommon';
 import PropTypes from 'prop-types';
 
 const CheckoutForm = ({ product }) => {
-    // eslint-disable-next-line no-unused-vars
     const [clientSecret, setClientSecret] = useState("");
     const axiosCommon = useAxiosCommon();
     const stripe = useStripe();
     const elements = useElements();
 
-    console.log("hiii")
 
 
     useEffect(() => {
         const getClientSecret = async price => {
             const { data } = await axiosCommon.post("/create-payment-intent", price);
-            console.log('client secret from server', data)
+            console.log('client secret from server', data);
             setClientSecret(data.clientSecret)
         }
         if (product?.price && product?.price > 1) {
-            getClientSecret()
+            getClientSecret({price: product?.price})
         }
     }, [product?.price]);
+
 
     const handleSubmit = async (event) => {
         // Block native form submission.
