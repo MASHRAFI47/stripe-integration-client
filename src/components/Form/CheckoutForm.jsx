@@ -71,10 +71,10 @@ const CheckoutForm = ({ product }) => {
 
         //confirm payment
 
-        const { error: confirmError, paymentIntent } = await stripe.confirmPayment(clientSecret, {
-            paymentMethod: {
+        const { error: confirmError, paymentIntent } = await stripe.confirmCardPayment(clientSecret, {
+            payment_method: {
+                card: card,
                 billing_details: {
-                    card: card,
                     email: user?.email,
                 }
             }
@@ -89,6 +89,12 @@ const CheckoutForm = ({ product }) => {
 
         if (paymentIntent.status === 'succeeded') {
             //handle payment successful
+            const paymentInfo = {
+                ...product,
+                transactionId: paymentIntent.id,
+                date: new Date(),
+            }
+            console.log(paymentInfo)
         }
 
     };
@@ -112,7 +118,7 @@ const CheckoutForm = ({ product }) => {
                         },
                     }}
                 />
-                <button type="submit" disabled={!stripe || !clientSecret || processing}>
+                <button className='btn btn-success text-white' type="submit" disabled={!stripe || !clientSecret || processing}>
                     {`Pay ${'$' + product?.price}`}
                 </button>
             </form>
