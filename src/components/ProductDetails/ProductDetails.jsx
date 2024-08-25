@@ -5,6 +5,7 @@ import useAxiosCommon from "../../hooks/useAxiosCommon";
 import { loadStripe } from "@stripe/stripe-js";
 import { Elements } from "@stripe/react-stripe-js";
 import CheckoutForm from "../Form/CheckoutForm";
+import LoadingSpinner from "../LoadingSpinner/LoadingSpinner";
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
 
@@ -19,6 +20,8 @@ const ProductDetails = () => {
             return data
         }
     })
+
+    if(isLoading) return <LoadingSpinner />
 
     console.log(product)
 
