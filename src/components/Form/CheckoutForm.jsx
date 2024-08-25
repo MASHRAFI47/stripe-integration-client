@@ -8,8 +8,10 @@ import { CardElement, useElements, useStripe } from '@stripe/react-stripe-js';
 import '../Form/CheckoutForm.css';
 import useAxiosCommon from '../../hooks/useAxiosCommon';
 import PropTypes from 'prop-types';
+import useAuth from '../../hooks/useAuth';
 
 const CheckoutForm = ({ product }) => {
+    const { user } = useAuth();
     const [clientSecret, setClientSecret] = useState();
     const [cardError, setCardError] = useState("");
     const [processing, setProcessing] = useState(false);
@@ -60,10 +62,35 @@ const CheckoutForm = ({ product }) => {
 
         if (error) {
             console.log('[error]', error);
+            setProcessing(false);
             setCardError(error.message);
         } else {
             console.log('[PaymentMethod]', paymentMethod);
         }
+
+
+        //confirm payment
+
+        const { error: confirmError, paymentIntent } = await stripe.confirmPayment(clientSecret, {
+            paymentMethod: {
+                billing_details: {
+                    card: card,
+                    email: user?.email,
+                }
+            }
+        });
+
+        if (confirmError) {
+            console.log(error.message);
+            setCardError(error.message);
+            setProcessing(false);
+            return;
+        }
+
+        if (paymentIntent.status === 'succeeded') {
+            //handle payment successful
+        }
+
     };
 
     return (
@@ -90,7 +117,7 @@ const CheckoutForm = ({ product }) => {
                 </button>
             </form>
 
-            {cardError && <p>{cardError}</p>}
+            {cardError && <p className='text-red-600'>{cardError}</p>}
         </>
     );
 };
